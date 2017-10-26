@@ -1,0 +1,31 @@
+{% load staticfiles %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>BookInfo</title>
+     <style>
+        .outer{
+            margin: 100px auto;
+            height: 400px;
+            border: 1px solid rebeccapurple;
+            width: 70%;
+        }
+    </style>
+    <link rel="stylesheet" href="{% static "dist/css/bootstrap.css" %}">
+    <script src="{% static "dist/js/jquery-3.1.1.js" %}"></script>
+    <script src="{% static "dist/js/bootstrap.js" %}"></script>
+
+</head>
+<body>
+    <div class="outer">
+        <table class="table table-striped">
+        <tr>
+            <th>本书简介</th>
+        </tr>
+            <tr>
+                <td>{{ bookinfo.info }}</td>
+            </tr>
+    </div>
+</body>
+</html>

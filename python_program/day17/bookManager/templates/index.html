@@ -1,0 +1,170 @@
+{% load staticfiles %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        .outer{
+            margin: 100px auto;
+            height: 400px;
+            border: 1px solid rebeccapurple;
+            width: 70%;
+        }
+    </style>
+
+    <link rel="stylesheet" href="{% static "dist/css/bootstrap.css" %}">
+    <script src="{% static "dist/js/jquery-3.1.1.js" %}"></script>
+    <script src="{% static "dist/js/bootstrap.js" %}"></script>
+</head>
+<body>
+
+<!--导航栏-->
+<nav class="navbar navbar-default navbar-fixed-top navbar-inverse">
+    <div class="container">
+        <!--Brand and toggle get grouped for better mobile display-->
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="#">起点中文网</a>
+        </div>
+        <!-- 左上角的导航 -->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav" >
+                <li ><a href="#">主页<span class="sr-only">(current)</span></a></li>
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">分类 <span class="caret"></span></a>
+                    <ul class="dropdown-menu" role="menu">
+                        <li><a href="#xiuxian">修仙</a></li>
+                        <li><a href="#dushi">都市</a></li>
+                        <li><a href="#wuxia">武侠</a></li>
+                        <li><a href="#xuanhuan">玄幻</a></li>
+                        <li><a href="#yanqing">言情</a></li>
+                        <li><a href="#xuanyi">悬疑</a></li>
+                        <li class="divider"></li>
+                        <li><a href="#">更多...</a></li>
+                    </ul>
+                </li>
+                <li data-toggle="modal" data-target="#about"><a href="#" >关于</a></li>
+            </ul>
+            <form class="navbar-form navbar-right" role="search" action="/index/" method="post">
+                <div class="form-group">
+                    <input type="text" class="form-control" placeholder="搜索书名.." id="keyword" name="keyword">
+                    <button type="submit" class="btn btn-default">Go</button>
+                </div>
+            </form>
+
+
+            <ul class="nav navbar-nav navbar-right">
+                <li data-toggle="modal" data-target="#signin-signup-tab" id="signin-button"><a href="#" >登陆</a></li>
+                <li data-toggle="modal" data-target="#signin-signup-tab" id="signup-button"><a href="#" >注册</a></li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<!--中间表格区域-->
+{% block mid_msg %}
+<hr>
+<div class="outer">
+    <a href="/addBook/"><button type="button" class="btn btn-primary">添加</button></a>
+    <table class="table table-striped" width=100%>
+        <tr>
+            <th>编号</th>
+            <th>书名</th>
+            <th>价格</th>
+            <th>作者</th>
+            <th>出版社</th>
+            <th>简介</th>
+            <th>操作</th>
+        </tr>
+        {% for book in all_book_list %}
+        <tr>
+            <td>{{ book.id }}</td>
+            <td>{{ book.title }}</td>
+            <td>{{ book.price }}</td>
+            <td>{{ book.author }}</td>
+            <td>{{ book.publish }}</td>
+            <td>
+                <div style="width: 150px;text-overflow:ellipsis; white-space:nowrap; overflow:hidden;">{{ book.info }}</div>
+            </td>
+            <td>
+                <a href="/delBook/?id={{ book.id }}"><button type="button" class="btn btn-danger">删除</button></a>
+                <button type="button"  class="edit btn btn-primary" data-toggle="modal" data-target="#exampleModal" data-whatever="@mdo">编辑</button>
+                <a href="/BookInfo/?id={{ book.id }}"><button type="button" class="btn btn-info">查看</button></a>
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+</div>
+{% endblock %}
+
+<!--模态框-->
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="exampleModalLabel">New message</h4>
+            </div>
+            <div class="modal-body">
+                <form action="/ediBook/" method="post" id="edi_form">
+                    <div class="form-group">
+                        <input type="hidden" class="form-control" id="ID" name="ID">
+                    </div>
+                    <div class="form-group">
+                        <label for="title" class="control-label">书名</label>
+                        <input type="text" class="form-control" id="title" name="title">
+                    </div>
+                    <div class="form-group">
+                        <label for="price" class="control-label">价格</label>
+                        <input type="text" class="form-control" id="price" name="price">
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label" for="author">作者</label>
+                        <select class="form-control" form="edi_form" id="author" name="author">
+                            {% for author in all_author_list %}
+                            <option>{{ author.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label" for="publish">出版社</label>
+                        <select class="form-control" form="edi_form" id="publish" name="publish">
+                            {% for publish in all_publish_list %}
+                            <option>{{ publish.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="info" class="control-label">简介</label>
+                        <textarea class="form-control" id="info" name="info"></textarea>
+                    </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                <button type="submit" class="btn btn-primary">确定</button>
+            </div>
+            </form>
+        </div>
+    </div>
+</div>
+<script>
+    $(".edit").click(function () {
+        var $msg = $(this).parent().siblings();
+        $("#ID").val($msg.eq(0).text());
+        $("#title").val($msg.eq(1).text());
+        $("#price").val($msg.eq(2).text());
+        $("#author").val($msg.eq(3).text());
+        $("#publish").val($msg.eq(4).text());
+        $("#info").val($msg.eq(5).text());
+    })
+</script>
+</body>
+</html>

@@ -1,0 +1,70 @@
+{% load staticfiles %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="{% static "dist/css/bootstrap.css" %}">
+    <script src="{% static "dist/js/jquery-3.1.1.js" %}"></script>
+    <script src="{% static "dist/js/bootstrap.js" %}"></script>
+</head>
+<body>
+<div class="container">
+    <div class="raw">
+        <div class="col-md-10">
+            <form class="form-horizontal" role="form" action="/addBook/" method="post" id="add_form">
+                <fieldset>
+                    <legend>上架新书</legend>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label" for="title">书名</label>
+                        <div class="col-sm-4">
+                            <input class="form-control" id="title" type="text"  name="title" placeholder="title"/>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label" for="price">价格</label>
+                        <div class="col-sm-4">
+                            <input class="form-control" id="price" type="text" name="price" placeholder="price"/>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label" for="author">作者</label>
+                        <div class="col-sm-4">
+                            <!--单选框-->
+                            <select class="form-control" form="add_form" id="author" name="author" multiple="multiple">
+                                <!--多选框-->select标签属性 --->multiple="multiple">
+                                <!--<select class="form-control" form="add_form" id="author" name="author" multiple="multiple">-->
+                                {% for author in all_author_list %}
+                                <option>{{ author.name }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label" for="publish">出版社</label>
+                        <div class="col-sm-4">
+                            <select class="form-control" form="add_form" id="publish" name="publish">
+                                {% for publish in all_publish_list %}
+                                <option>{{ publish.name }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label" for="info">简介</label>
+                        <div class="col-sm-4">
+                            <input class="form-control" id="info" type="text" name="info" placeholder="info"/>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-offset-2 col-sm-10">
+                            <button type="submit" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal" data-whatever="@mdo">提交</button>
+                        </div>
+                    </div>
+                </fieldset>
+            </form>
+        </div>
+    </div>
+</div>
+</body>
+</html>

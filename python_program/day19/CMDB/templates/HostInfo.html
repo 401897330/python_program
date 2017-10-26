@@ -1,0 +1,21 @@
+{% extends "index.html" %}
+
+{% block mid_msg %}
+<div class="outer">
+    <table class="table table-striped">
+        <tr>
+            <th>
+                用户名
+            </th>
+            <th>
+                邮箱地址
+            </th>
+        </tr>
+        {% for obj in user_list %}
+        <tr>
+            <td>{{ obj.user__name }}</td>
+            <td>{{ obj.user__e_mail }}</td>
+        </tr>
+        {% endfor %}
+</div>
+{% endblock %}

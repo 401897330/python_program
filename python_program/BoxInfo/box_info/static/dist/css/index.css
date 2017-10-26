@@ -1,0 +1,63 @@
+
+.outer{
+    margin: 100px auto;
+    height: auto;
+    border: 1px solid rebeccapurple;
+    width: 99%;
+}
+
+
+td {
+    text-align: center;
+}
+
+
+th{
+    text-align: center;
+}
+
+
+li.active{
+    background-color: blue;
+}
+
+
+#current_page a {
+    display: inline-block;
+    margin: 5px;
+    width: 40px;
+    height: 40px;
+    text-align: center;
+    line-height: 40px;
+    border-radius: 4px;
+    border: solid 1px grey;
+    text-decoration: none;
+    font-weight: bolder;
+}
+
+
+#current_page a:hover{
+    background-color: #336699;
+}
+
+
+#current_page a.active{
+    background-color: #336699;
+    color: white;
+    font-weight: bolder;
+    border-radius: 4px;
+}
+
+
+#jump_btn {
+    width: 50px;
+    height: 40px;
+    text-align: center;
+    line-height: 40px;
+    border-radius: 4px;
+    border: solid 1px grey;
+    text-decoration: none;
+    font-weight: bolder;
+    background-color: #336699;
+    color: white;
+}

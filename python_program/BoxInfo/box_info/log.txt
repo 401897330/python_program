@@ -1,0 +1,18 @@
+Performing system checks...
+
+
+You have 13 unapplied migration(s). Your project may not work properly until you apply the migrations for app(s): admin, auth, contenttypes, sessions.
+Run 'python manage.py migrate' to apply them.
+October 09, 2017 - 11:20:22
+Django version 1.11.5, using settings 'box_info.settings'
+Starting development server at http://192.168.1.40:8080/
+Quit the server with CONTROL-C.
+Performing system checks...
+
+
+You have 13 unapplied migration(s). Your project may not work properly until you apply the migrations for app(s): admin, auth, contenttypes, sessions.
+Run 'python manage.py migrate' to apply them.
+October 09, 2017 - 11:20:40
+Django version 1.11.5, using settings 'box_info.settings'
+Starting development server at http://192.168.1.40:8080/
+Quit the server with CONTROL-C.

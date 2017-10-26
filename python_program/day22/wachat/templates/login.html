@@ -1,0 +1,55 @@
+{% load staticfiles %}
+<style>
+    html,body{
+    margin:0px;
+    height:100%;
+}
+</style>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>抽屉</title>
+    <link rel="stylesheet" href="{% static "dist/css/bootstrap.css" %}">
+    <style>
+        #login_img {
+            width: 200px;
+            height: 200px;
+        }
+    </style>
+</head>
+<body>
+    <div style="margin-top: 100px;margin-left: 40%">
+        <img id="login_img" src="https://login.weixin.qq.com/qrcode/{{ uuid }}" alt="">
+    </div>
+    <script src="{% static "dist/js/jquery-3.1.1.js" %}"></script>
+    <script src="{% static "dist/js/bootstrap.js" %}"></script>
+    <script>
+        $(function () {
+           checkLogin();
+        });
+
+        function checkLogin() {
+            $.ajax({
+                url: "/check_login/",
+                type: "GET",
+                data: "",
+                dataType: "JSON",
+                success:function (arg) {
+                    if(arg.code == 408){
+                        checkLogin();
+                        }
+                    else if(arg.code == 201){
+                        $("#login_img").attr("src",arg.data);
+                        checkLogin();
+                    }
+                    else if(arg.code == 200){
+                        location.href = "/index/"
+                    }
+                }
+            })
+        }
+
+    </script>
+</body>
+</html>

@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        .box .share-icon{
+            width: 50px;
+            height: 50px;
+            display: none;
+        }
+        .box:hover .share-icon{
+            display: inline-block;
+        }
+        /*.box:hover{*/
+            /*display: none;*/
+        /*}*/
+    </style>
+     <link rel="stylesheet" href="index.css">
+</head>
+<body>
+<div class="box" style="background: red;width: 100px;height: 100px;">
+    <div class="share-icon">
+        <span style="color: black">hello</span>
+    </div>
+
+</div>
+
+<div>
+    <input type="datetime">
+    <input type="date">
+</div>
+<table class="table table-striped" width=100%>
+    <tr>
+        <th>姓名</th>
+        <th>岗位</th>
+        <th>年龄</th>
+    </tr>
+    <tr>
+        <td style="background-color: green;">111111111</td>
+        <td>111111111</td>
+        <td>111111111</td>
+    </tr>
+    <tr>
+        <td class="down_time">12</td>
+        <td class="down_time">5</td>
+        <td class="down_time">22</td>
+    </tr>
+</table>
+
+<a style="width: 60px;height: 40px;background-color: #2459a2;border-radius: 4px;display: inline-block;position: relative">
+    <input type="file" style="opacity: 0;position: absolute;size: 60px;height: 40px"  name="upload_image"  id="upload_image" >
+</a>
+<label class="ui_button ui_button_primary" for="xFile">上传文件</label>
+<form><input type="file" id="xFile" style="position:absolute;clip:rect(0 0 0 0);"></form>
+<div style="text-align: center"></div>
+
+
+<div  id="current_page">
+    <a style="width: 80px" href="">上一页</a>
+    <a href="">1</a>
+    <a  class="active" href="">2</a>
+    <a href="">3</a>
+    <a href="">4</a>
+    <a href="">5</a>
+    <a href="">6</a>
+</div>
+<input type="submit" style="width: 40px;height: 40px;background-color: #336699;color: white;font-weight: bold;border-radius: 4px;">
+
+<script>
+    function () {
+        if($(".down_time").val() > 10){
+            $this.style.backgroundColor = red
+        }
+    }
+
+
+
+</script>
+</body>
+</html>

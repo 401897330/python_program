@@ -1,0 +1,159 @@
+{% extends "index.html" %}
+
+{% block mid_msg %}
+<div style="position: absolute;margin-top: 30px;margin-left: 45%;font-weight: bolder"><h2>业务线管理</h2></div>
+<hr>
+<div class="outer">
+    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal2" data-whatever="@mdo">增加</button>    <table class="table table-striped" width=100% >
+        <tr>
+            <th>ID</th>
+            <th>业务线名</th>
+            <th>操作</th>
+        </tr>
+        {% for service in all_service_list %}
+        <tr>
+            <td>{{ service.id }}</td>
+            <td>{{ service.name }}</td>
+            <td>
+                <!--这里request.get_full_path是获取当前页的路径，如果想用这个变量需要在settings里添加一行 'django.template.context_processors.request',-->
+                <a href="/delService/?data=/{{ service.id}}{{ request.get_full_path }}/"><button type="button" class="btn btn-danger">删除</button></a>
+                <button type="button"  class="edit_service btn btn-primary" data-toggle="modal" data-target="#exampleModal" data-whatever="@mdo">编辑</button>
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+</div>
+
+<!--#分页显示-->
+<div style="widows:50%;margin-left: 25%;margin-top: -90px">
+    <nav aria-label="Page navigation">
+        <ul class="pagination">
+            {% if all_service_list.has_previous %}
+                <li><a href="/manager_service/?page={{ all_service_list.previous_page_number }}">上一页</a></li>
+            {% else %}
+                <li class="disabled"><a href="#">上一页</a></li>
+            {% endif %}
+
+            {% if p.num_pages <= 10 %}
+                {% for num in p.page_range %}
+                    {% if num == page %}
+                        <li class="active"><a href="/manager_service/?page={{ num }}">{{ num }}</a></li>
+                    {% else %}
+                        <li><a href="/manager_service/?page={{ num }}">{{ num }}</a></li>
+                    {% endif %}
+                {% endfor %}
+            {% else %}
+                {% if page %}
+                    {% if page <= 6 %}
+                        {% for num in page_num %}
+                            {% if num == page %}
+                                <li class="active"><a href="/manager_service/?page={{ num }}">{{ num }}</a></li>
+                            {% else %}
+                                <li><a href="/manager_service/?page={{ num }}">{{ num }}</a></li>
+                            {% endif %}
+                        {% endfor %}
+                    {% else %}
+                        <li><a href="/manager_service/?page=1">1</a></li>
+                        <li><a href="">...</a></li>
+                        {% for num in page_num2 %}
+                            {% if num == page %}
+                                <li class="active"><a href="/manager_service/?page={{ num }}">{{ num }}</a></li>
+                            {% else %}
+                                <li><a href="/manager_service/?page={{ num }}">{{ num }}</a></li>
+                            {% endif %}
+                        {% endfor %}
+                    {% endif %}
+
+                {% else %}
+                    {% for num in page_num %}
+                        {% if num == page %}
+                            <li class="active"><a href="/manager_service/?page={{ num }}">{{ num }}</a></li>
+                        {% else %}
+                            <li><a href="/manager_service/?page={{ num }}">{{ num }}</a></li>
+                        {% endif %}
+                    {% endfor %}
+                {% endif %}
+            {% endif %}
+
+            {% if all_service_list.has_next %}
+                <li><a href="/manager_service/?page={{ all_service_list.next_page_number }}">下一页</a></li>
+            {% else %}
+                <li class="disabled"><a href="#">下一页</a></li>
+            {% endif %}
+            <span style="line-height: 34px;margin-left: 10px">共{{ p.num_pages }}页</span>
+            <li>
+                <form action="/manager_service/" method="get" id="page_form" style="display: inline-block">
+                <input type="text" style="width: 40px" id="page" name="page"><input type="submit" value="跳转">
+                </form>
+            </li>
+        </ul>
+    </nav>
+</div>
+
+{% endblock %}
+
+{% block model_msg %}
+<!--编辑模态框-->
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="exampleModalLabel">New message</h4>
+            </div>
+            <div class="modal-body">
+                <form action="/ediService/" method="post" id="edi_form">
+                    {% csrf_token %}
+                    <div class="form-group">
+                        <input type="hidden" class="form-control" id="ID" name="ID">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="service_name" class="control-label">业务线名</label>
+                        <input type="text" class="form-control" id="service_name" name="service_name">
+                    </div>
+
+                    <div class="form-group">
+                        <input type="hidden" class="form-control" id="page" name="page" value="{{ request.get_full_path }}">
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                        <button type="submit" class="btn btn-primary">确定</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<!--增加模态框-->
+
+<div class="modal fade" id="exampleModal2" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel2">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="exampleModalLabel2">新增业务线</h4>
+            </div>
+            <div class="modal-body">
+                <form id="add_service_form" action="/addService/" method="post">
+                    {% csrf_token %}
+                    <div class="form-group">
+                        <label for="add_service" class="control-label">输入要添加的业务线名</label>
+                        <input type="text" class="form-control" id="add_service" name="add_service">
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-primary">确定</button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+{% endblock %}

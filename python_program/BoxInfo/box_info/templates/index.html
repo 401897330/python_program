@@ -1,0 +1,197 @@
+{% load staticfiles %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>HOST MANAGER</title>
+    <link rel="stylesheet" href="{% static "dist/css/bootstrap.css" %}">
+    <link rel="stylesheet" href="{% static "dist/css/login.css" %}">
+    <link rel="stylesheet" href="{% static "dist/css/index.css" %}">
+    <script src="{% static "dist/js/jquery-3.1.1.js" %}"></script>
+    <script src="{% static "dist/js/bootstrap.js" %}"></script>
+    <style>
+        .outer{
+            margin: 100px auto;
+            height: auto;
+            border: 1px solid rebeccapurple;
+            width: 99%;
+        }
+
+
+        td {
+            text-align: center;
+        }
+
+
+        th{
+            text-align: center;
+        }
+
+
+        li.active{
+            background-color: blue;
+        }
+
+
+        #current_page a {
+            display: inline-block;
+            margin: 5px;
+            width: 40px;
+            height: 40px;
+            text-align: center;
+            line-height: 40px;
+            border-radius: 4px;
+            border: solid 1px grey;
+            text-decoration: none;
+            font-weight: bolder;
+        }
+
+
+        #current_page a:hover{
+            background-color: #336699;
+        }
+
+
+        #current_page a.active{
+            background-color: #336699;
+            color: white;
+            font-weight: bolder;
+            border-radius: 4px;
+        }
+
+
+        #jump_btn {
+            width: 50px;
+            height: 40px;
+            text-align: center;
+            line-height: 40px;
+            border-radius: 4px;
+            border: solid 1px grey;
+            text-decoration: none;
+            font-weight: bolder;
+            background-color: #336699;
+            color: white;
+        }
+
+    </style>
+</head>
+<body>
+
+<!--导航栏-->
+<nav class="navbar navbar-default navbar-fixed-top navbar-inverse">
+    <div class="container">
+        <!--Brand and toggle get grouped for better mobile display-->
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="#" style="col or: blue;font-weight: bolder;font-size:38px">TVM</a>
+        </div>
+        <!-- 左上角的导航 -->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav" >
+                <li ><a href="#">主页<span class="sr-only">(current)</span></a></li>
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false" style="color:red;font-weight: bolder">管理操作<span class="caret"></span></a>
+                    <ul class="dropdown-menu" role="menu">
+                        <li><a href="/logout/">退出登录</a></li>
+                        <li class="divider"></li>
+                        <li><a href="#">更多...</a></li>
+                    </ul>
+                </li>
+                <li data-toggle="modal" data-target="#about"><a href="#" >关于</a></li>
+            </ul>
+            <form class="navbar-form navbar-right" role="search" action="/suntv/index/" method="POST">
+                {% csrf_token %}
+                <div class="form-group" id="serch_msg">
+                    <span style="color: white;font-weight:bold;">盒子号 </span>
+                    <input type="text" class="form-control" placeholder="搜索sn号..." id="keyword" name="keyword">
+                    <span style="color: white;font-weight:bold;">开始时间 </span>
+                    <input type="date" class="form-control" id="start_time" name="start_time">
+                    <span style="color: white;font-weight:bold;">结束时间 </span>
+                    <input type="date" class="form-control" id="end_time" name="end_time">
+                    <button type="submit" class="btn btn-default" id="serch_btn">Go</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</nav>
+
+<!--中间表格区域-->
+{% block mid_msg %}
+<div style="position: absolute;margin-top: 30px;margin-left: 40%;font-weight: bolder;"><h2>用户盒子信息</h2></div>
+<hr>
+<div class="outer">
+    <table class="table table-striped" width=100%>
+        <tr>
+            <th>序号</th>
+            <th>请求时间</th>
+            <th>IP</th>
+            <th>SN</th>
+            <th>频道名</th>
+            <th>码流</th>
+            <th>网速</th>
+            <th>取流节点</th>
+            <th>盒子地址</th>
+            <th>下载用时</th>
+            <th>ts号</th>
+            <th>请求状态码</th>
+            <th>是否使用多线程</th>
+        </tr>
+        {% for data in all_data %}
+        <tr>
+            {% load MyTags %}
+            <td>{{ forloop.counter | order_number:current_page }}</td>
+            <td class="request_time">{{ data.request_time|date:'Y-m-d H:i:s' }}</td>
+            <td class="ip">{{ data.ip }}</td>
+            <td class="sn">{{ data.sn }}</td>
+            <td class="channel">{{ data.channel }}</td>
+            <td class="stream">{{ data.stream }}</td>
+
+            {% if data.stream|compare:data.netspeed %}
+            <td class="netspeed">{{ data.netspeed }}</td>
+            {% else %}
+            <td class="netspeed" style="background-color: #FF2D2D">{{ data.netspeed }}</td>
+            {% endif %}
+
+            <td class="request_addr">{{ data.request_addr }}</td>
+            <td class="sn_addr">{{ data.sn_addr }}</td>
+            {% if data.down_time|digital > 10 %}
+                <td class="down_time" style="background-color: #FF2D2D">{{ data.down_time }}</td>
+            {% else %}
+                <td class="down_time">{{ data.down_time }}</td>
+            {% endif %}
+
+            <td class="ts_num">{{ data.ts_num }}</td>
+
+            {% if data.status == "403" or data.status == "401" %}
+            <td class="status" style="background-color: #FF2D2D">{{ data.status }}</td>
+            {% else %}
+            <td class="status" >{{ data.status }}</td>
+            {% endif %}
+
+            <td class="ht">{{ data.ht }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+</div>
+
+<!--#分页显示-->
+<div style="widows:50%;margin-left: 25%;margin-top: -90px" id="current_page">
+    {{ page_str|safe }}
+    <span style="line-height: 34px;margin-left: 10px;font-size:20px;">共{{ pager_count }}页</span>
+    <form action="/suntv/index/" method="get" id="page_form" style="display: inline-block">
+        <input type="text" style="width: 40px;height: 40px;" id="page" name="page">
+        <input id="jump_btn" type="submit" value="跳转">
+    </form>
+</div>
+{% endblock %}
+
+
+
+</body>
+</html>

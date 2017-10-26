@@ -1,0 +1,448 @@
+{% load staticfiles %}
+<style>
+    html,body{
+    margin:0px;
+    height:100%;
+}
+</style>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>抽屉</title>
+    <link rel="stylesheet" href="{% static "dist/css/bootstrap.css" %}">
+    <link rel="stylesheet" href="{% static "dist/css/login.css" %}">
+    <link rel="stylesheet" href="{% static "dist/css/index.css" %}">
+    <script src="{% static "dist/js/jquery-3.1.1.js" %}"></script>
+    <script src="{% static "dist/js/bootstrap.js" %}"></script>
+</head>
+<body>
+{% block mid_msg %}
+    <div class="head-band">
+        <div style="height:44px;width: 76%;margin-left: 12%">
+            <div class="title">
+                <a href=""></a>
+            </div>
+            <div class="acctive-menu">
+                <a href="/index/" class="td">全部</a>
+                {% for news_type in news_type_list %}
+                <a href="/index/{{ news_type.id }}/" class="td">{{ news_type.caption }}</a>
+                {% endfor %}
+            </div>
+            <div acctive-login style="width:35%;height: 44px;float: left;text-align: center;line-height: 44px;float:right;">
+                {% if ck %}
+                    <a href="" class="tb td" style="font-size: 14px">{{ ck }}</a>
+                    <a href="/logout/" class="tb td" style="font-size: 14px">注销</a>
+                {% else %}
+                    <a href="/register/" class="tb td" style="font-size: 14px">注册</a>
+                    <a href="/login/" class="tb td" style="font-size: 14px">登陆</a>
+                {% endif %}
+                <div class="search">
+                    <input type="text" style="width:130px;height:28px;margin-top: 7px;border: none;float: right;">
+                     <a class="search-img" href="">
+                         <span class="search-icon"></span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="box">
+        <div class="mid">
+            <div class="mid-left">
+                <div class="mid-top">
+                    <a class="icon-hot hot-text" href="">
+                        <span class="icon-hot"></span>
+                    </a>
+                    <a href="" class="hot-text">
+                        <span class="hot-icon">最热</span>
+                    </a>
+                    <a href="" class="hot-text">发现</a>
+                    <a href="" class="hot-text">人类发布</a>
+                    {% if ck %}
+                    <button type="button" class="btn  hot-text2-icon" style="line-height: 10px" data-toggle="modal" data-target="#exampleModal" data-whatever="@mdo"><font color="white " style="font-weight: bolder">+ 发布</font></button>
+                    {% else %}
+                    <a href="/login/"><button type="button" class="btn  hot-text2-icon" style="line-height: 10px" data-toggle="modal"  data-whatever="@mdo"><font color="white " style="font-weight: bolder">+ 发布</font></button></a>
+                    {% endif %}
+                    <a href="" class="hot-text2">3天</a>
+                    <a href="" class="hot-text2">24小时</a>
+                    <a href="" class="hot-text2" style="color: darkgray;font-weight: lighter">即时排序</a>
+                </div>
+
+
+                {% for news in news_list %}
+                <div class="mid-msg">
+                    <div style="float: right;margin-top: 0px"><img src="/{{ news.avatar }}" style="width: 60px;height: 60px" alt=""></div>
+                    <div style="width: 100%;height: auto;margin-left: 0px;overflow: ellipsis;word-wrap: break-word;margin-top: 2%">
+                        <a href="http://wx4.sinaimg.cn/large/a24bcd19ly1fhw9drim54j20j60m040y.jpg" class="msg-text">{{ news.title }}</a>
+                        <a style="color: darkgray;size: 2px" href="http://dig.chouti.com/r/pic/hot/1"><font size="2px" color="#a9a9a9">&nbsp;-{{ news.url }}&nbsp;&nbsp;{{ news.new_type.caption }}</font></a>
+                    </div>
+                    <div style="width: 100%;height: auto;line-height: 20%;margin-left: 0px;margin-bottom: 0px">
+                        <a class="text-context new-like" new_id="{{ news.id }}" style="position: relative">
+                            <span class="icon-dig icon-dig1"></span><b style="font-weight: bolder;color: darkgray">{{ news.like_count }}</b>
+                        </a>
+                        <a class="text-context comment" nid="{{ news.id }}">
+                            <span class="icon-dig icon-dig2"></span><b style="font-weight: bolder;color: darkgray">{{ news.comment_count }}</b>
+                        </a>
+                        <a class="text-context text-context1">
+                            <span class="icon-dig icon-dig3"></span><b style="color: darkgray;font-size: 8px">私藏</b>
+                        </a>
+                        <a class="text-context2">
+                            <span class="text-context icon-dig icon-dig4" style="background: url(/'{{ news.url }}') no-repeat 0 0;"></span><b style="font-size: 2px;color: darkgray">{{ news.user.username }}</b>
+                        </a>
+                        <a style="font-size: 3px;color: orange" href="">10分钟前入网</a>&nbsp;&nbsp;
+                        <span class="share-icon">
+                            <b style="font-size: 3px;color: darkgray">分享到&nbsp;</b>
+                            <a class="share-xinlang" href=""></a>
+                            <a class="share-douban" href=""></a>
+                            <a class="share-qq" href=""></a>
+                            <a class="share-renren" href=""></a>
+                        </span>
+                    </div>
+                </div>
+            {% endfor %}
+
+            </div>
+
+
+
+            <div class="mid-right">
+                <img style="float:left;width: 100%;margin-right: -5px" src="\static\images\hot-news.jpg" alt="" >
+                <img style="width: 100%;float: left;clear: left;margin-bottom: 20px" src="/static/images/love.jpg" alt="">
+            </div>
+
+            <!--分页页码-->
+            <div class="page">
+            <div style="widows:50%;margin-left: 25%;margin-top: -90px">
+                <nav aria-label="Page navigation">
+                    <ul class="pagination">
+            {% if news_list.has_previous %}
+                        <li><a href="/index/?page={{ news_list.previous_page_number }}">上一页</a></li>
+            {% else %}
+                        <li class="disabled"><a href="#">上一页</a></li>
+            {% endif %}
+
+            {% if p.num_pages <= 10 %}
+                {% for num in p.page_range %}
+                    {% if num == page %}
+                        <li class="active"><a href="/index/?page={{ num }}">{{ num }}</a></li>
+                    {% else %}
+                        <li><a href="/index/?page={{ num }}">{{ num }}</a></li>
+                    {% endif %}
+                {% endfor %}
+            {% else %}
+                {% if page %}
+                    {% if page <= 6 %}
+                        {% for num in page_num %}
+                            {% if num == page %}
+                                <li class="active"><a href="/index/?page={{ num }}">{{ num }}</a></li>
+                            {% else %}
+                                <li><a href="/index/?page={{ num }}">{{ num }}</a></li>
+                            {% endif %}
+                        {% endfor %}
+                    {% else %}
+                        <li><a href="/index/?page=1">1</a></li>
+                        <li><a href="">...</a></li>
+                        {% for num in page_num2 %}
+                            {% if num == page %}
+                        <li class="active"><a href="/index/?page={{ num }}">{{ num }}</a></li>
+                            {% else %}
+                        <li><a href="/index/?page={{ num }}">{{ num }}</a></li>
+                            {% endif %}
+                        {% endfor %}
+                    {% endif %}
+
+                {% else %}
+                    {% for num in page_num %}
+                        {% if num == page %}
+                        <li class="active"><a href="/index/?page={{ num }}">{{ num }}</a></li>
+                        {% else %}
+                        <li><a href="/index/?page={{ num }}">{{ num }}</a></li>
+                        {% endif %}
+                    {% endfor %}
+                {% endif %}
+            {% endif %}
+
+            {% if news_list.has_next %}
+                        <li><a href="/index/?page={{ news_list.next_page_number }}">下一页</a></li>
+            {% else %}
+                        <li class="disabled"><a href="#">下一页</a></li>
+            {% endif %}
+                        <span style="line-height: 34px;margin-left: 10px">共{{ p.num_pages }}页</span>
+                        <li>
+                            <form action="/index/" method="get" id="page_form" style="display: inline-block">
+                                <input type="text" style="width: 40px" id="page" name="page">
+                                <input type="submit" value="跳转">
+                            </form>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+            </div>
+
+            <div class="bottom">
+                <p class="copyright"><a class="copyright" href="">关于我们</a>&nbsp;|&nbsp;
+                    <a class="copyright" href="">联系我们</a>&nbsp;|&nbsp;
+                    <a class="copyright" href="">服务条款</a>&nbsp;|&nbsp;
+                    <a class="copyright" href="">隐私政策</a>&nbsp;|&nbsp;
+                    <a class="copyright" href="">抽屉新热榜工具</a>&nbsp;|&nbsp;
+                    <a class="copyright" href="">下载客户端</a>&nbsp;|&nbsp;
+                    <a class="copyright" href="">意见与反馈</a>&nbsp;|&nbsp;
+                    <a class="copyright" href="">友情链接</a>&nbsp;|&nbsp;
+                    <a class="copyright" href="">公告</a>&nbsp;|&nbsp;
+                </p>
+                <p class="copyright"> 旗下站点 ©2017 chouti.com 京ICP备09053974号-3 京公网安备 110102004562</p>
+                <p class="copyright">违法和不良信息举报： 电话：010-58302039 邮箱：jubao@chouti.com</p>
+                <p class="copyright">版权所有：北京格致璞科技有限公司</p>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+
+<!--模态框-->
+{% block model_msg %}
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="exampleModalLabel">分享新发现</h4>
+            </div>
+            <div class="modal-body">
+                <form action="/AddNews/" method="post" name="add_form" id="add_form" >
+                   {% csrf_token %}
+                    <div class="form-group">
+                        <label for="url_name" class="control-label">添加链接</label>
+                        <input type="text" class="form-control" id="url_name" name="url_name">
+                        <button type="button" class="btn btn-primary" id="get_url_msg">获取标题</button>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="title_name" class="control-label">标题</label>
+                        <input type="text" class="form-control" id="title_name" name="title_name">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="message_text" class="control-label">添加摘要</label>
+                        <textarea class="form-control" id="message_text" name="message_text"></textarea>
+                    </div>
+
+                    <!--ajax上传文件-->
+                    <div class="form-group">
+                        <label style="width: 60px;height: 40px;background-color: #2e6da4;border-radius: 4px;text-align: center;line-height: 40px;color: white" for="upload_image">上传文件</label>
+                        <span style="display: inline-block;height: 40px;text-align: center;line-height: 40px">支持jpg、jpeg、gif、png格式，且不超过5MB</span><br>
+                        <input type="file" id="upload_image" style="position:absolute;clip:rect(0 0 0 0);">
+                        <button type="button" class="btn btn-primary" style="height: 40px;width: 60px" onclick="uploadImg()">预览</button>
+                        <div id="container"></div>
+                    </div>
+
+
+                    <!--iframe上传文件-->
+                    <!--<form action="/upload_img/" target="uploadImgIframe" enctype="multipart/form-data">-->
+                        <!--{% csrf_token %}-->
+                        <!--<input type="file" name="upload_image" id="upload_image" value="上传图片">-->
+                    <!--</form>-->
+                    <!--<iframe id="ifm" name="uploadImgIframe" style="display: none" onload="successCallback(this)"></iframe>-->
+
+                    <!--<div class="form-group" id="imgList">-->
+                    <!--</div>-->
+
+                    <div class="form-group">
+                        <input type="text" id="avatar" name="avatar" style="display: none">
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label" for="news_type">发布到：</label>
+                            <select class="form-control" form="add_form" id="news_type" name="news_type">
+                                {% for news_type in news_type_list %}
+                                <option nid="{{ news_type.id }}">{{ news_type.caption }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-primary">确定</button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+<script>
+    $("#get_url_msg").click(function () {
+        var url = $("#url_name").val();
+        $.ajax({
+            url: "/get_title/",
+            type: "POST",
+            data: {"csrfmiddlewaretoken": '{{ csrf_token }}',
+                   "url": url},
+            success:function (arg) {
+                dic = JSON.parse(arg);
+                $("#title_name").val(dic["title"]);
+                $("#message_text").val(dic["desc"]);
+            }
+        })
+    });
+
+//    使用ajax和formData实现文件上传
+    function uploadImg() {
+        var formData = new FormData();
+        formData.append('img',$("#upload_image")[0].files[0]);
+        formData.append('csrfmiddlewaretoken','{{ csrf_token }}');
+        $.ajax({
+            url: "/upload_img/",
+            type: "POST",
+            data: formData,
+            processData: false,
+            contentType: false,
+            success:function (arg) {
+                arg = JSON.parse(arg);
+                if (arg.status) {
+                    var tag = document.createElement('img');
+                    tag.src = "/" + arg.path;
+                    tag.style.width = 568 + "px";
+                    tag.style.height = 380 + "px";
+                    $('#container').empty();
+                    $('#container').append(tag);
+                    $('#avatar').val(arg.path)
+                }
+            }
+        })
+    }
+
+//    使用iframe伪Ajax上传文件
+//    function successCallback(ths){
+//        console.log(123);
+//        var response = ths.contentWindow.document.body.innerHTML;
+//        response = JSON.parse(response);
+//        console.log(response);
+//        var img = document.createElement('img');
+//        img.src = "/" + response.data;
+//        $('#imgList').append(img)
+//    }
+
+
+
+//    这个函数的意思是：当文档加载后要运行的函数，防止文档没有加载完成就执行函数找不到内容报错.
+//    是$(document).ready(function)的简写， 里的代码是在页面内容都加载完才执行的，如果把代码直接写到script标签里，
+//    当页面加载完这个script标签就会执行里边的代码了，此时如果你标签里执行的代码调用了当前还没加载过来的代码或者dom，
+//    那么就会报错，当然如果你把script标签放到页面最后面那么就没问题了，此时和ready效果一样。
+
+    $(function () {
+        bindLikeEvent();
+        Hide();
+    });
+
+    function bindLikeEvent() {
+        $('.new-like').click(function () {
+            var newid = $(this).attr("new_id");
+            var $this = $(this);
+            $.ajax({
+                url: "/do_like/",
+                type: "POST",
+                data: {'csrfmiddlewaretoken':'{{ csrf_token }}','newid':newid},
+                dataType: 'JSON',
+                success: function (arg) {
+                    if(arg.status){
+                        console.log("成功",arg.code)
+                        var num = $this.children("b").text();
+                        var count = parseInt(num);
+                        if(arg.code == 666){
+                            $this.children("b").text(count - 1)
+                            showLikeCount($this,"-1");
+                        }
+                        else if(arg.code == 999){
+                            $this.children("b").text(count + 1)
+                            showLikeCount($this,"+1");
+                        }
+                    }
+                    else{
+                        alert(arg.msg)
+                    }
+                }
+            })
+        });
+    }
+
+
+    function showLikeCount($this,text) {
+        var fontSize = 5;
+        var top = 0;
+        var right = 0;
+        var opacity =1;
+
+        var tag = document.createElement("span");
+        tag.innerText = text;
+        tag.style.position = "absolute";
+        tag.style.fontSize = fontSize + "px";
+        tag.style.top = top + "px";
+        tag.style.right = right + "px";
+        tag.style.opacity = opacity;
+        $this.children("b").after(tag);
+
+        var obj = setInterval(function () {
+            fontSize += 5;
+            top -= 5;
+            right -= 5;
+            opacity -= 0.1;
+
+            tag.style.fontSize = fontSize + "px";
+            tag.style.top = top + "px";
+            tag.style.right = right + "px";
+            tag.style.opacity = opacity;
+            if(opacity <=0){
+                clearInterval(obj);
+                tag.remove();
+            }
+        },100);
+    }
+
+
+    $(".comment").click(function () {
+         var $result = $(this).parent().next();
+         console.log($result.length);
+         if (!$result.length){
+             var nid = $(this).attr("nid");
+             var $this = $(this);
+             $.ajax({
+                 url: "/comment/",
+                 type: "POST",
+                 dataType: "JSON",
+                 data: {'csrfmiddlewaretoken':'{{ csrf_token }}',"nid":nid},
+                 success: function (arg) {
+                     $(".comment_list").remove();
+                     var tag = document.createElement('div');
+                     tag.className = "comment_list";
+                     tag.style.fontSize = 5;
+                     tag.innerHTML = arg;
+                     $this.parent().after(tag);
+                     Hide();
+                 }
+            })
+            }
+        else{
+            $(".comment_list").remove();
+        }
+
+    });
+
+   function Hide() {
+        $('.sons').click(function () {
+        if ($(this).next().hasClass("hider")){
+            $(this).next().removeClass('hider');
+        }
+        else{
+            $(this).next().addClass('hider');
+        }
+        })
+   }
+
+
+</script>
+
+</body>
+</html>

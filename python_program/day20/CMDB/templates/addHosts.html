@@ -1,0 +1,62 @@
+{% load staticfiles %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="{% static "dist/css/bootstrap.css" %}">
+    <script src="{% static "dist/js/jquery-3.1.1.js" %}"></script>
+    <script src="{% static "dist/js/bootstrap.js" %}"></script>
+</head>
+<body>
+<div class="container">
+    <div class="raw">
+        <div class="col-md-10">
+            <form class="form-horizontal" role="form" action="/addHosts/" method="post" id="add_form">
+                {% csrf_token %}
+                <fieldset>
+                    <legend>增加新机器</legend>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label" for="ip">机器ip</label>
+                        <div class="col-sm-4">
+                            <input class="form-control" id="ip" type="text"  name="ip" placeholder="ip"/>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label" for="port">端口</label>
+                        <div class="col-sm-4">
+                            <input class="form-control" id="port" type="text" name="port" placeholder="port"/>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label" for="doman">域名</label>
+                        <div class="col-sm-4">
+                            <input class="form-control" id="doman" type="text" name="doman" placeholder="doman"/>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label" for="service">业务线</label>
+                        <div class="col-sm-4">
+                            <select class="form-control" form="add_form" id="service" name="service">
+                                {% for service in all_service_list %}
+                                <option>{{ service.name }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="col-sm-offset-2 col-sm-10">
+                            <button type="submit" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal" data-whatever="@mdo">提交</button>
+                        </div>
+                    </div>
+                </fieldset>
+            </form>
+        </div>
+    </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,44 @@
+{% extends "index.html" %}
+
+{% block mid_msg %}
+    <div style="width: 50%;margin-left: 25%;margin-top: 80px;">
+        <div class="modal-content" >
+            <!--右上角的x符号-->
+            <!--<div class="modal-body">-->
+                <!--<button class="close" data-dismiss="modal">-->
+                    <!--<span>&times;</span>-->
+                <!--</button>-->
+            <!--</div>-->
+            <div class="modal-title">
+                <h1 class="text-center">添加用户</h1>
+            </div>
+            <div class="modal-body" data-backdrop="static">
+                <!--novalidate 此表单不使用浏览器提供的检测提示，例如：e_mail格式错误提醒-->
+                <form class="form-group" method="post" action="/register/" id="register_form" novalidate>
+                    {% csrf_token %}
+                    <div class="form-group">
+                        <label for="username">用户名</label>
+                        {{ form.username }} <span style="color: red">{{ form.errors.name.0 }}</span>
+                    </div>
+                    <div class="form-group">
+                        <label for="user_pwd">密码</label>
+                        {{ form.password }} <span style="color: red">{{ form.errors.password.0 }}</span>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="re_password">再次输入密码</label>
+                        {{ form.re_password }} <span style="color: red">{{ form.errors.re_password.0 }}</span>
+                    </div>
+
+
+                    <div class="text-right">
+                        <button type="submit" class="btn btn-primary"  id="register_btn">提交</button>
+                        <a href="/register/"><button type="button" class="btn btn-danger">取消</button></a>
+                    </div>
+                    <a href="/login/">已有账号？点我登录</a>
+                </form>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

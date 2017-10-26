@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<style>
+    html,body{
+    margin:0px;
+    height:100%;
+    }
+</style>
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="index.css">
+</head>
+<body>
+
+    <div class="bak">
+        <button id="add">增加</button>
+        <hr>
+        <table border="1px" id="tab" width="400px">
+            <tr>
+                <th>姓名</th>
+                <th>年龄</th>
+                <th>班级</th>
+                <th colspan="2">操作</th>
+            </tr>
+
+            <tr>
+                <td>alex</td>
+                <td>30</td>
+                <td>s17</td>
+                <td><input type="button" value="删除" class="del"></td>
+                <td><input type="button" value="修改" class="edi"></td>
+            </tr>
+
+            <tr>
+                <td>egon</td>
+                <td>35</td>
+                <td>s17</td>
+                <td><input type="button" value="删除" class="del"></td>
+                <td><input type="button" value="修改" class="edi"></td>
+            </tr>
+
+            <tr>
+                <td>yuanhao</td>
+                <td>30</td>
+                <td>s17</td>
+                <td><input type="button" value="删除" class="del"></td>
+                <td><input type="button" value="修改" class="edi"></td>
+            </tr>
+        </table>
+    </div>
+    <div class="fade hide"></div>
+    <div class="model hide">
+        <div class="text">
+            <p>姓名:<input type="text" id="name"></p>
+            <p>年龄:<input type="text" id="age"></p>
+            <p>班级:<input type="text" id="cls"></p>
+            <input type="button" value="确定" id="confirm">
+            <input type="button" value="取消" id="cancle">
+        </div>
+    </div>
+    <script src="jquery-3.1.1.js"></script>
+    <script src="js.js"></script>
+</body>
+</html>
+
+
+

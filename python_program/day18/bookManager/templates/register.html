@@ -1,0 +1,43 @@
+{% extends "index.html" %}
+
+{% block mid_msg %}
+    <div style="width: 50%;margin-left: 25%;margin-top: 80px;">
+        <div class="modal-content">
+            <!--右上角的x符号-->
+            <!--<div class="modal-body">-->
+                <!--<button class="close" data-dismiss="modal">-->
+                    <!--<span>&times;</span>-->
+                <!--</button>-->
+            <!--</div>-->
+            <div class="modal-title">
+                <h1 class="text-center">注册</h1>
+            </div>
+            <div class="modal-body">
+                <form class="form-group" method="post" action="/register/">
+                    <div class="form-group">
+                        <label for="user_name">用户名</label>
+                        <input class="form-control" type="text" placeholder="6-15位字母或数字" id="user_name" name="user_name">
+                    </div>
+                    <div class="form-group">
+                        <label for="user_pwd">密码</label>
+                        <input class="form-control" type="password" placeholder="至少6位字母或数字" id="user_pwd" name="user_pwd">
+                    </div>
+                    <div class="form-group">
+                        <label for="re_user_pwd">再次输入密码</label>
+                        <input class="form-control" type="password" placeholder="至少6位字母或数字" id="re_user_pwd" name="re_user_pwd">
+                    </div>
+                    <div class="form-group">
+                        <label for="e_mail">邮箱</label>
+                        <input class="form-control" type="email" placeholder="例如:123@123.com" id="e_mail" name="e_mail">
+                    </div>
+                    <div class="text-right">
+                        <button class="btn btn-primary register-btn" >提交</button>
+                        <button class="btn btn-danger" data-dismiss="modal">取消</button>
+                    </div>
+                    <a href="/login/">已有账号？点我登录</a>
+                </form>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

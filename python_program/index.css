@@ -1,0 +1,28 @@
+
+#current_page a {
+    display: inline-block;
+    margin: 5px;
+    width: 40px;
+    height: 40px;
+    text-align: center;
+    line-height: 34px;
+    border-radius: 4px;
+    border: solid 1px grey;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+#current_page a:hover{
+    background-color: #336699;
+}
+
+#current_page a.active{
+    background-color: #336699;
+    color: white;
+    font-weight: bolder;
+    border-radius: 4px;
+}
+
+.ln_page {
+    width: 80px;
+}

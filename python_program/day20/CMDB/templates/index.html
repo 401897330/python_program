@@ -1,0 +1,265 @@
+{% load staticfiles %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>HOST MANAGER</title>
+    <link rel="stylesheet" href="{% static "dist/css/bootstrap.css" %}">
+    <link rel="stylesheet" href="{% static "dist/css/login.css" %}">
+    <script src="{% static "dist/js/jquery-3.1.1.js" %}"></script>
+    <script src="{% static "dist/js/bootstrap.js" %}"></script>
+    <style>
+        .outer{
+            margin: 100px auto;
+            height: 400px;
+            border: 1px solid rebeccapurple;
+            width: 70%;
+        }
+        td {
+            text-align: center;
+        }
+        th{
+            text-align: center;
+        }
+        li.active{
+            background-color: blue;
+        }
+    </style>
+</head>
+<body>
+
+<!--导航栏-->
+<nav class="navbar navbar-default navbar-fixed-top navbar-inverse">
+    <div class="container">
+        <!--Brand and toggle get grouped for better mobile display-->
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="#" style="color: blue;font-weight: bolder">系统管理</a>
+        </div>
+        <!-- 左上角的导航 -->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav" >
+                <li ><a href="/index/">主页<span class="sr-only">(current)</span></a></li>
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false" style="color:red;font-weight: bolder">管理操作<span class="caret"></span></a>
+                    <ul class="dropdown-menu" role="menu">
+                        <li><a href="/index/" >主机管理</a></li>
+                        <li><a href="/manager_user/">用户管理</a></li>
+                        <li><a href="/manager_service/">业务管理</a></li>
+                        <li class="divider"></li>
+                        <li><a href="#">更多...</a></li>
+                    </ul>
+                </li>
+                <li data-toggle="modal" data-target="#about"><a href="#" >关于</a></li>
+            </ul>
+            <form class="navbar-form navbar-right" role="search" action="/index/">
+                {% csrf_token %}
+                <div class="form-group">
+                    <input type="text" class="form-control" placeholder="搜索业务线名.." id="keyword" name="keyword">
+                    <button type="submit" class="btn btn-default">Go</button>
+                </div>
+            </form>
+
+            <ul class="nav navbar-nav navbar-right">
+                {% if  ck %}
+                    <li data-toggle="modal" data-target="#signin-signup-tab" id="signin-button"><a href="">当前用户：{{ ck }}</a></li>
+                    <li data-toggle="modal" data-target="#signin-signup-tab" id="signup-button"><a href="/logout/" >注销</a></li>
+                {% else %}
+                     <li data-toggle="modal" data-target="#signin-signup-tab" id="signin-button"><a href="/login/">登陆</a></li>
+                    <li data-toggle="modal" data-target="#signin-signup-tab" id="signup-button"><a href="/register/" >注册</a></li>
+                {% endif %}
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<!--中间表格区域-->
+{% block mid_msg %}
+<div style="position: absolute;margin-top: 30px;margin-left: 45%;font-weight: bolder"><h2>主机管理</h2></div>
+<hr>
+<div class="outer">
+    <a href="/addHosts/"><button type="button" class="btn btn-primary">添加</button></a>
+    <table class="table table-striped" width=100% >
+        <tr>
+            <th>编号</th>
+            <th>机器IP</th>
+            <th>端口</th>
+            <th>域名</th>
+            <th>业务线</th>
+            <th>操作</th>
+        </tr>
+        {% for host in all_hosts_list %}
+        <tr>
+            <td>{{ host.id }}</td>
+            <td>{{ host.ip }}</td>
+            <td>{{ host.port }}</td>
+            <td>{{ host.doman }}</td>
+            <td>{{ host.service }}</td>
+            <td>
+                <!--这里request.get_full_path是获取当前页的路径，如果想用这个变量需要在settings里添加一行 'django.template.context_processors.request',-->
+                <a href="/delHosts/?data=/{{ host.id}}{{ request.get_full_path }}/"><button type="button" class="btn btn-danger">删除</button></a>
+                <button type="button"  class="edit_hosts btn btn-primary" data-toggle="modal" data-target="#exampleModal" data-whatever="@mdo">编辑</button>
+                <a href="/HostInfo/?name={{ host.service }}"><button type="button" class="btn btn-info">查看</button></a>
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+</div>
+
+<!--#分页显示-->
+<div style="widows:50%;margin-left: 25%;margin-top: -90px">
+    <nav aria-label="Page navigation">
+        <ul class="pagination">
+            {% if all_hosts_list.has_previous %}
+                <li><a href="/index/?page={{ all_hosts_list.previous_page_number }}">上一页</a></li>
+            {% else %}
+                <li class="disabled"><a href="#">上一页</a></li>
+            {% endif %}
+
+            {% if p.num_pages <= 10 %}
+                {% for num in p.page_range %}
+                    {% if num == page %}
+                        <li class="active"><a href="/index/?page={{ num }}">{{ num }}</a></li>
+                    {% else %}
+                        <li><a href="/index/?page={{ num }}">{{ num }}</a></li>
+                    {% endif %}
+                {% endfor %}
+            {% else %}
+                {% if page %}
+                    {% if page <= 6 %}
+                        {% for num in page_num %}
+                            {% if num == page %}
+                                <li class="active"><a href="/index/?page={{ num }}">{{ num }}</a></li>
+                            {% else %}
+                                <li><a href="/index/?page={{ num }}">{{ num }}</a></li>
+                            {% endif %}
+                        {% endfor %}
+                    {% else %}
+                        <li><a href="/index/?page=1">1</a></li>
+                        <li><a href="">...</a></li>
+                        {% for num in page_num2 %}
+                            {% if num == page %}
+                                <li class="active"><a href="/index/?page={{ num }}">{{ num }}</a></li>
+                            {% else %}
+                                <li><a href="/index/?page={{ num }}">{{ num }}</a></li>
+                            {% endif %}
+                        {% endfor %}
+                    {% endif %}
+
+                {% else %}
+                    {% for num in page_num %}
+                        {% if num == page %}
+                            <li class="active"><a href="/index/?page={{ num }}">{{ num }}</a></li>
+                        {% else %}
+                            <li><a href="/index/?page={{ num }}">{{ num }}</a></li>
+                        {% endif %}
+                    {% endfor %}
+                {% endif %}
+            {% endif %}
+
+            {% if all_hosts_list.has_next %}
+                <li><a href="/index/?page={{ all_hosts_list.next_page_number }}">下一页</a></li>
+            {% else %}
+                <li class="disabled"><a href="#">下一页</a></li>
+            {% endif %}
+            <span style="line-height: 34px;margin-left: 10px">共{{ p.num_pages }}页</span>
+            <li>
+                <form action="/index/" method="get" id="page_form" style="display: inline-block">
+                <input type="text" style="width: 40px" id="page" name="page"><input type="submit" value="跳转">
+                </form>
+            </li>
+        </ul>
+    </nav>
+</div>
+{% endblock %}
+
+{% block model_msg %}
+<!--模态框-->
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="exampleModalLabel">New message</h4>
+            </div>
+            <div class="modal-body">
+                <form action="/ediHosts/" method="post" id="edi_form">
+                    {% csrf_token %}
+                    <div class="form-group">
+                        <input type="hidden" class="form-control" id="ID" name="ID">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="ip" class="control-label">机器IP</label>
+                        <input type="text" class="form-control" id="ip" name="ip">
+                    </div>
+                    <div class="form-group">
+                        <label for="port" class="control-label">端口</label>
+                        <input type="text" class="form-control" id="port" name="port">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="doman" class="control-label">域名</label>
+                        <input type="text" class="form-control" id="doman" name="doman">
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label" for="service">业务线</label>
+                        <select class="form-control" form="edi_form" id="service" name="service">
+                            {% for service in all_service_list %}
+                            <option>{{ service.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <input type="hidden" class="form-control" id="page" name="page" value="{{ request.get_full_path }}">
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                        <button type="submit" class="btn btn-primary">确定</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+<script>
+$(".edit_hosts").click(function () {
+    var $msg = $(this).parent().siblings();
+    $("#ID").val($msg.eq(0).text());
+    $("#ip").val($msg.eq(1).text());
+    $("#port").val($msg.eq(2).text());
+    $("#doman").val($msg.eq(3).text());
+    $("#service").val($msg.eq(4).text());
+});
+
+$(".edit_user").click(function () {
+    var $msg = $(this).parent().siblings();
+    $("#ID").val($msg.eq(0).text());
+    $("#user_name").val($msg.eq(1).text());
+    $("#e_mail").val($msg.eq(2).text());
+    var li = [];
+    $msg.eq(3).children("span").each(function () {
+        li.push($(this).attr("nid"));
+    });
+    $("#service").val(li)
+});
+
+$(".edit_service").click(function () {
+    var $msg = $(this).parent().siblings();
+    $("#service_name").val($msg.eq(1).text());
+})
+</script>
+
+</body>
+</html>

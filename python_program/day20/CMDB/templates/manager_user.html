@@ -1,0 +1,154 @@
+{% extends "index.html" %}
+
+{% block mid_msg %}
+<div style="position: absolute;margin-top: 30px;margin-left: 45%;font-weight: bolder"><h2>用户管理</h2></div>
+<hr>
+<div class="outer">
+    <div style="height: 37px"></div>
+    <table class="table table-striped" width=100% >
+        <tr>
+            <th>ID</th>
+            <th>用户名</th>
+            <th>邮箱</th>
+            <th>负责的业务线</th>
+            <th>操作</th>
+        </tr>
+        {% for user in users_list %}
+        <tr>
+            <td>{{ user.id }}</td>
+            <td>{{ user.name }}</td>
+            <td>{{ user.e_mail }}</td>
+            <td>
+                {%for ser in  user.service.all %}
+                    <span nid="{{ ser.id }}">{{ser.name}}</span>
+                {% endfor %}
+            </td>
+            <td>
+                <!--这里request.get_full_path是获取当前页的路径，如果想用这个变量需要在settings里添加一行 'django.template.context_processors.request',-->
+                <a href="/delUser/?data=/{{ user.id}}{{ request.get_full_path }}/"><button type="button" class="btn btn-danger">删除</button></a>
+                <button type="button"  class="edit_user btn btn-primary" data-toggle="modal" data-target="#exampleModal" data-whatever="@mdo">编辑</button>
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+</div>
+
+<!--#分页显示-->
+<div style="widows:50%;margin-left: 25%;margin-top: -90px">
+    <nav aria-label="Page navigation">
+        <ul class="pagination">
+            {% if all_users_list.has_previous %}
+                <li><a href="/manager_user/?page={{ all_users_list.previous_page_number }}">上一页</a></li>
+            {% else %}
+                <li class="disabled"><a href="#">上一页</a></li>
+            {% endif %}
+
+            {% if p.num_pages <= 10 %}
+                {% for num in p.page_range %}
+                    {% if num == page %}
+                        <li class="active"><a href="/manager_user/?page={{ num }}">{{ num }}</a></li>
+                    {% else %}
+                        <li><a href="/manager_user/?page={{ num }}">{{ num }}</a></li>
+                    {% endif %}
+                {% endfor %}
+            {% else %}
+                {% if page %}
+                    {% if page <= 6 %}
+                        {% for num in page_num %}
+                            {% if num == page %}
+                                <li class="active"><a href="/manager_user/?page={{ num }}">{{ num }}</a></li>
+                            {% else %}
+                                <li><a href="/manager_user/?page={{ num }}">{{ num }}</a></li>
+                            {% endif %}
+                        {% endfor %}
+                    {% else %}
+                        <li><a href="/manager_user/?page=1">1</a></li>
+                        <li><a href="">...</a></li>
+                        {% for num in page_num2 %}
+                            {% if num == page %}
+                                <li class="active"><a href="/manager_user/?page={{ num }}">{{ num }}</a></li>
+                            {% else %}
+                                <li><a href="/manager_user/?page={{ num }}">{{ num }}</a></li>
+                            {% endif %}
+                        {% endfor %}
+                    {% endif %}
+
+                {% else %}
+                    {% for num in page_num %}
+                        {% if num == page %}
+                            <li class="active"><a href="/manager_user/?page={{ num }}">{{ num }}</a></li>
+                        {% else %}
+                            <li><a href="/manager_user/?page={{ num }}">{{ num }}</a></li>
+                        {% endif %}
+                    {% endfor %}
+                {% endif %}
+            {% endif %}
+
+            {% if all_users_list.has_next %}
+                <li><a href="/manager_user/?page={{ all_users_list.next_page_number }}">下一页</a></li>
+            {% else %}
+                <li class="disabled"><a href="#">下一页</a></li>
+            {% endif %}
+            <span style="line-height: 34px;margin-left: 10px">共{{ p.num_pages }}页</span>
+            <li>
+                <form action="/manager_user/" method="get" id="page_form" style="display: inline-block">
+                <input type="text" style="width: 40px" id="page" name="page"><input type="submit" value="跳转">
+                </form>
+            </li>
+        </ul>
+    </nav>
+</div>
+
+{% endblock %}
+
+{% block model_msg %}
+<!--模态框-->
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="exampleModalLabel">New message</h4>
+            </div>
+            <div class="modal-body">
+                <form action="/ediUser/" method="post" id="edi_form">
+                    {% csrf_token %}
+                    <div class="form-group">
+                        <input type="hidden" class="form-control" id="ID" name="ID">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="user_name" class="control-label">用户名</label>
+                        <input type="text" class="form-control" id="user_name" name="user_name">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="e_mail" class="control-label">用户邮箱</label>
+                        <input type="text" class="form-control" id="e_mail" name="e_mail">
+                    </div>
+
+                    <div class="form-group">
+                        <label class="control-label" for="service">负责的业务线</label>
+                        <select class="form-control" form="edi_form" id="service" name="service" multiple="multiple">
+                                <!--多选框-->select标签属性 --->multiple="multiple">
+                                <!--<select class="form-control" form="add_form" id="author" name="author" multiple="multiple">-->
+                                {% for service in all_service_list %}
+                                <option value="{{service.id}}">{{ service.name }}</option>
+                                {% endfor %}
+                            </select>
+                    </div>
+
+                    <div class="form-group">
+                        <input type="hidden" class="form-control" id="page" name="page" value="{{ request.get_full_path }}">
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                        <button type="submit" class="btn btn-primary">确定</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
